@@ -40,26 +40,32 @@ Console.WriteLine();
 
 
 var studentService = new StudentService(context);
+var statisticsService = new StatisticsService(context);
 
-//studentService.PrintAllStudents();
-//studentService.PrintActiveStudentsWithTracing();
-//studentService.GetActiveStudentsCount();
+
+// =========================
+// Student Queries (Core LINQ)
+// =========================
 
 studentService.GetFirstActiveStudentOrDefault();
 studentService.GetStudentByEmail("notfound@student.com");
 
-
 studentService.GetStudentByIdUsingFind(1);
-studentService.GetStudentByIdUsingFind(1);
-studentService.GetStudentByIdUsingFind(1);
-
 studentService.GetStudentByIdUsingFirstOrDefault(1);
-
 
 studentService.GetStudentNamesOnly();
 studentService.GetActiveStudentsProjectedSorted();
 
 
+// =========================
+// Statistics (Aggregations)
+// =========================
 
+statisticsService.CheckActiveStudentsExist();
+statisticsService.CheckAllCoursesHaveValidPrice();
 
+statisticsService.GetActiveStudentsCount();
+statisticsService.GetAverageEnrollmentProgress();
+statisticsService.GetTotalCoursesDuration();
 
+statisticsService.GetMinAndMaxCoursePrices();
