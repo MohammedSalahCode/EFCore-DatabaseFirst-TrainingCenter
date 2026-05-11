@@ -78,5 +78,62 @@ namespace TrainingCenter.Services
             Console.WriteLine($"Lowest Course Price : {minPrice}");
             Console.WriteLine($"Highest Course Price: {maxPrice}");
         }
+
+
+        // =========================
+        // Reporting Queries
+        // =========================
+
+        public void GetDistinctStudentStatuses()
+        {
+            var statuses = _context.Students
+                .Select(s => s.Status)
+                .Distinct()
+                .ToList();
+
+            foreach (var status in statuses)
+            {
+                Console.WriteLine(status);
+            }
+        }
+
+
+        public void GetStudentsCountPerStatus()
+        {
+            var report = _context.Students
+                .GroupBy(s => s.Status)
+                .Select(group => new
+                {
+                    Status = group.Key,
+                    TotalStudents = group.Count()
+                })
+                .OrderBy(x => x.Status)
+                .ToList();
+
+            foreach (var row in report)
+            {
+                Console.WriteLine($"{row.Status} : {row.TotalStudents}");
+            }
+        }
+
+
+        public void GetStatusesHavingMoreThanTenStudents()
+        {
+            var report = _context.Students
+                .GroupBy(s => s.Status)
+                .Where(g => g.Count() > 10)
+                .Select(group => new
+                {
+                    Status = group.Key,
+                    TotalStudents = group.Count()
+                })
+                .OrderBy(x => x.Status)
+                .ToList();
+
+            foreach (var row in report)
+            {
+                Console.WriteLine($"{row.Status} : {row.TotalStudents}");
+            }
+        }
     }
 }

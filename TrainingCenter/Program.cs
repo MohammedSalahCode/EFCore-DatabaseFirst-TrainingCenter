@@ -69,3 +69,22 @@ statisticsService.GetAverageEnrollmentProgress();
 statisticsService.GetTotalCoursesDuration();
 
 statisticsService.GetMinAndMaxCoursePrices();
+
+
+// =========================
+// Reporting Queries (GroupBy / Distinct)
+// =========================
+
+Console.WriteLine("======== REPORTING ========");
+Console.WriteLine();
+
+statisticsService.GetDistinctStudentStatuses();
+Console.WriteLine();
+
+statisticsService.GetStudentsCountPerStatus();
+Console.WriteLine();
+
+statisticsService.GetStatusesHavingMoreThanTenStudents();
+
+Console.WriteLine();
+Console.WriteLine("Execution completed successfully.");
