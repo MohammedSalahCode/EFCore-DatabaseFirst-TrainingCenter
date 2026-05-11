@@ -89,5 +89,135 @@ namespace TrainingCenter.Services
             Console.WriteLine();
         }
 
+
+
+        // =========================
+        // Single Retrieval
+        // =========================
+
+        public void GetFirstActiveStudentOrDefault()
+        {
+            var query = _context.Students
+                .Where(s => s.Status == "Active")
+                .OrderBy(s => s.StudentId);
+
+            Console.WriteLine("Preview SQL:");
+            Console.WriteLine("----------------");
+            Console.WriteLine(query.ToQueryString());
+            Console.WriteLine();
+
+            var student = query.FirstOrDefault();
+
+            if (student == null)
+            {
+                Console.WriteLine("No active student found");
+                return;
+            }
+
+            Console.WriteLine($"{student.StudentId} - {student.FirstName} {student.LastName}");
+        }
+
+
+        public void GetStudentByEmail(string email)
+        {
+            var query = _context.Students
+                .Where(s => s.Email == email);
+
+            Console.WriteLine("Preview SQL:");
+            Console.WriteLine("----------------");
+            Console.WriteLine(query.ToQueryString());
+            Console.WriteLine();
+
+            var student = query.SingleOrDefault();
+
+            if (student == null)
+            {
+                Console.WriteLine("Student not found");
+                return;
+            }
+
+            Console.WriteLine($"{student.StudentId} - {student.Email}");
+        }
+
+
+
+        // =========================
+        // Primary Key Lookup
+        // =========================
+
+        public void GetStudentByIdUsingFind(int id)
+        {
+            var student = _context.Students.Find(id);
+
+            if (student == null)
+            {
+                Console.WriteLine("Student not found.");
+                return;
+            }
+
+            Console.WriteLine($"{student.StudentId} - {student.FirstName}");
+        }
+
+
+        public void GetStudentByIdUsingFirstOrDefault(int id)
+        {
+            var query = _context.Students
+                .Where(s => s.StudentId == id);
+
+            Console.WriteLine("Preview SQL:");
+            Console.WriteLine("----------------");
+            Console.WriteLine(query.ToQueryString());
+            Console.WriteLine();
+
+            var student = query.FirstOrDefault();
+
+            if (student == null)
+            {
+                Console.WriteLine("Student not found.");
+                return;
+            }
+
+            Console.WriteLine($"{student.StudentId} - {student.FirstName}");
+        }
+
+
+        // =========================
+        // Projection
+        // =========================
+
+        public void GetStudentNamesOnly()
+        {
+            var students = _context.Students
+                .Select(s => new
+                {
+                    s.FirstName,
+                    s.LastName
+                })
+                .ToList();
+
+            foreach (var s in students)
+            {
+                Console.WriteLine($"{s.FirstName} {s.LastName}");
+            }
+        }
+
+
+        public void GetActiveStudentsProjectedSorted()
+        {
+            var students = _context.Students
+                .Where(s => s.Status == "Active")
+                .Select(s => new
+                {
+                    s.StudentId,
+                    FullName = s.FirstName + " " + s.LastName
+                })
+                .OrderByDescending(s => s.StudentId)
+                .ToList();
+
+            foreach (var s in students)
+            {
+                Console.WriteLine($"{s.StudentId} - {s.FullName}");
+            }
+        }
     }
 }

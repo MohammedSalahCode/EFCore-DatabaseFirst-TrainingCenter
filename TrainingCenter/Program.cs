@@ -41,7 +41,25 @@ Console.WriteLine();
 
 var studentService = new StudentService(context);
 
-studentService.PrintAllStudents();
-studentService.PrintActiveStudentsWithTracing();
-studentService.GetActiveStudentsCount();
+//studentService.PrintAllStudents();
+//studentService.PrintActiveStudentsWithTracing();
+//studentService.GetActiveStudentsCount();
+
+studentService.GetFirstActiveStudentOrDefault();
+studentService.GetStudentByEmail("notfound@student.com");
+
+
+studentService.GetStudentByIdUsingFind(1);
+studentService.GetStudentByIdUsingFind(1);
+studentService.GetStudentByIdUsingFind(1);
+
+studentService.GetStudentByIdUsingFirstOrDefault(1);
+
+
+studentService.GetStudentNamesOnly();
+studentService.GetActiveStudentsProjectedSorted();
+
+
+
+
 
