@@ -135,5 +135,100 @@ namespace TrainingCenter.Services
                 Console.WriteLine($"{row.Status} : {row.TotalStudents}");
             }
         }
+
+
+        // =========================
+        // Related Data Loading
+        // =========================
+
+        public void DemonstrateNPlusOneProblem()
+        {
+            var students = _context.Students.ToList();
+
+            foreach (var student in students)
+            {
+                int enrollmentsCount = _context.Enrollments
+                    .Count(e => e.StudentId == student.StudentId);
+
+                Console.WriteLine(
+                    $"{student.FirstName} {student.LastName} - Enrollments: {enrollmentsCount}");
+            }
+        }
+
+
+        public void GetStudentsWithEnrollmentsUsingInclude()
+        {
+            var students = _context.Students
+                .Include(s => s.Enrollments)
+                .ToList();
+
+            foreach (var student in students)
+            {
+                Console.WriteLine(
+                    $"{student.FirstName} {student.LastName} - Enrollments: {student.Enrollments.Count}");
+            }
+        }
+
+        public void GetStudentsWithEnrollmentCountUsingProjection()
+        {
+            var students = _context.Students
+                .Select(s => new
+                {
+                    FullName = s.FirstName + " " + s.LastName,
+                    EnrollmentsCount = s.Enrollments.Count()
+                })
+                .ToList();
+
+            foreach (var student in students)
+            {
+                Console.WriteLine(
+                    $"{student.FullName} - Enrollments: {student.EnrollmentsCount}");
+            }
+        }
+
+
+        public void GetStudentsWithEnrollmentsAndCourses()
+        {
+            var students = _context.Students
+                .Include(s => s.Enrollments)
+                    .ThenInclude(e => e.Course)
+                .OrderBy(s => s.StudentId)
+                .ToList();
+
+            foreach (var student in students)
+            {
+                Console.WriteLine(
+                    $"{student.StudentId} - {student.FirstName} {student.LastName}");
+
+
+                foreach (var enrollment in student.Enrollments)
+                {
+                    Console.WriteLine(
+                        $"Course: {enrollment.Course.Title}, " +
+                        $"Status: {enrollment.Status}, " +
+                        $"Progress: {enrollment.ProgressPercent}%");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
+
+        public void GetStudentsSummaryReport()
+        {
+            var report = _context.Students
+                .Select(s => new
+                {
+                    FullName = s.FirstName + " " + s.LastName,
+                    CourseCount = s.Enrollments.Count(),
+                    TotalPaid = s.Enrollments.Sum(e => e.Course.Price)
+                })
+                .ToList();
+
+            foreach (var item in report)
+            {
+                Console.WriteLine($"{item.FullName} - {item.CourseCount} - {item.TotalPaid}");
+            }
+        }
     }
 }

@@ -87,4 +87,32 @@ Console.WriteLine();
 statisticsService.GetStatusesHavingMoreThanTenStudents();
 
 Console.WriteLine();
+
+
+// =========================
+// Related Data Loading
+// =========================
+
+Console.WriteLine("======== RELATED DATA LOADING ========");
+Console.WriteLine();
+
+statisticsService.DemonstrateNPlusOneProblem();
+
+Console.WriteLine();
+
+statisticsService.GetStudentsWithEnrollmentsUsingInclude();
+
+Console.WriteLine();
+
+statisticsService.GetStudentsWithEnrollmentCountUsingProjection();
+
+Console.WriteLine();
+
+statisticsService.GetStudentsWithEnrollmentsAndCourses();
+
+Console.WriteLine();
+
+statisticsService.GetStudentsSummaryReport();
+
+Console.WriteLine();
 Console.WriteLine("Execution completed successfully.");
