@@ -230,5 +230,103 @@ namespace TrainingCenter.Services
                 Console.WriteLine($"{item.FullName} - {item.CourseCount} - {item.TotalPaid}");
             }
         }
+
+
+
+
+        public void GetCoursesWithInstructorsUsingJoin()
+        {
+            var report = _context.Courses
+                .Join(
+                    _context.Instructors,
+                    course => course.InstructorId,
+                    instructor => instructor.InstructorId,
+                    (course, instructor) => new
+                    {
+                        course.Title,
+                        course.Code,
+                        InstructorName =
+                            instructor.FirstName + " " + instructor.LastName
+                    })
+                .OrderBy(x => x.Title)
+                .ToList();
+
+            foreach (var item in report)
+            {
+                Console.WriteLine(
+                    $"{item.Code} - {item.Title} - {item.InstructorName}");
+            }
+        }
+
+
+        public void GetStudentsWithProfilesUsingLeftJoin()
+        {
+            var report =
+
+                from student in _context.Students
+                join profile in _context.StudentProfiles
+                    on student.StudentId equals profile.StudentId
+                    into profilesGroup
+                from subProfile in profilesGroup.DefaultIfEmpty()
+
+                select new
+                {
+                    student.StudentId,
+                    FullName = student.FirstName + " " + student.LastName,
+                    City = subProfile != null ? subProfile.City : "No City Provided",
+                    Country = subProfile != null ? subProfile.Country : "No Country Provided"
+                };
+
+            var results = report.OrderBy(s => s.StudentId).ToList();
+
+            foreach (var row in results)
+            {
+                Console.WriteLine($"{row.StudentId} | {row.FullName,-20} | {row.City}, {row.Country}");
+            }
+        }
+
+
+        public void GetAllEnrollmentsUsingSelectMany()
+        {
+            var report = _context.Students
+                .SelectMany(
+                    student => student.Enrollments,
+                    (student, enrollment) => new
+                    {
+                        StudentName =
+                            student.FirstName + " " + student.LastName,
+
+                        enrollment.CourseId,
+                        enrollment.Status
+                    })
+                .ToList();
+
+            foreach (var item in report)
+            {
+                Console.WriteLine(
+                    $"{item.StudentName} - {item.CourseId} - {item.Status}");
+            }
+        }
+
+
+        // =========================
+        // Subqueries
+        // =========================
+
+        public void GetCoursesPricedAboveAverage()
+        {
+            var courses = _context.Courses
+                .Where(c =>
+                    c.Price >
+                    _context.Courses.Average(x => x.Price))
+                .OrderBy(c => c.Price)
+                .ToList();
+
+            foreach (var course in courses)
+            {
+                Console.WriteLine(
+                    $"{course.Code} - {course.Title} - {course.Price}");
+            }
+        }
     }
 }

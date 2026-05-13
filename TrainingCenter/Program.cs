@@ -115,4 +115,33 @@ Console.WriteLine();
 statisticsService.GetStudentsSummaryReport();
 
 Console.WriteLine();
+
+
+// =========================
+// Join Queries
+// =========================
+
+Console.WriteLine("======== JOIN QUERIES ========");
+Console.WriteLine();
+
+statisticsService.GetCoursesWithInstructorsUsingJoin();
+Console.WriteLine();
+
+statisticsService.GetStudentsWithProfilesUsingLeftJoin();
+Console.WriteLine();
+
+statisticsService.GetAllEnrollmentsUsingSelectMany();
+Console.WriteLine();
+
+
+// =========================
+// Subqueries
+// =========================
+
+Console.WriteLine("======== SUBQUERIES ========");
+Console.WriteLine();
+
+statisticsService.GetCoursesPricedAboveAverage();
+Console.WriteLine();
+
 Console.WriteLine("Execution completed successfully.");
