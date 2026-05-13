@@ -219,5 +219,33 @@ namespace TrainingCenter.Services
                 Console.WriteLine($"{s.StudentId} - {s.FullName}");
             }
         }
+
+
+        // =========================
+        // Pagination
+        // =========================
+
+        public void GetStudentsPaged(int pageNumber, int pageSize)
+        {
+            var pagedStudents = 
+                _context.Students
+                    .OrderBy(s => s.StudentId)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(s => new { s.StudentId, Name = s.FirstName + " " + s.LastName })
+                    .ToList();
+
+            if (!pagedStudents.Any())
+            {
+                Console.WriteLine("No students found in this page.");
+                return;
+            }
+
+            foreach (var s in pagedStudents)
+            {
+                Console.WriteLine($"ID: {s.StudentId,-3} | Name: {s.Name}");
+            }
+        }
+
     }
 }

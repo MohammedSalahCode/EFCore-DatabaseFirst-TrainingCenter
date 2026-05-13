@@ -144,4 +144,13 @@ Console.WriteLine();
 statisticsService.GetCoursesPricedAboveAverage();
 Console.WriteLine();
 
+
+
+// =========================
+// Pagination
+// =========================
+Console.WriteLine("======== PAGINATION ========");
+studentService.GetStudentsPaged(pageNumber: 1, pageSize: 3);
+studentService.GetStudentsPaged(pageNumber: 2, pageSize: 3);
+
 Console.WriteLine("Execution completed successfully.");
