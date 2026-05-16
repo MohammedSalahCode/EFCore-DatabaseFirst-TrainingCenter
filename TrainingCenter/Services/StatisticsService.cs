@@ -87,6 +87,7 @@ namespace TrainingCenter.Services
         public void GetDistinctStudentStatuses()
         {
             var statuses = _context.Students
+                .AsNoTracking()
                 .Select(s => s.Status)
                 .Distinct()
                 .ToList();
@@ -101,6 +102,7 @@ namespace TrainingCenter.Services
         public void GetStudentsCountPerStatus()
         {
             var report = _context.Students
+                .AsNoTracking()
                 .GroupBy(s => s.Status)
                 .Select(group => new
                 {
@@ -120,6 +122,7 @@ namespace TrainingCenter.Services
         public void GetStatusesHavingMoreThanTenStudents()
         {
             var report = _context.Students
+                .AsNoTracking()
                 .GroupBy(s => s.Status)
                 .Where(g => g.Count() > 10)
                 .Select(group => new
@@ -159,6 +162,7 @@ namespace TrainingCenter.Services
         public void GetStudentsWithEnrollmentsUsingInclude()
         {
             var students = _context.Students
+                .AsNoTracking()
                 .Include(s => s.Enrollments)
                 .ToList();
 
@@ -172,6 +176,7 @@ namespace TrainingCenter.Services
         public void GetStudentsWithEnrollmentCountUsingProjection()
         {
             var students = _context.Students
+                .AsNoTracking()
                 .Select(s => new
                 {
                     FullName = s.FirstName + " " + s.LastName,
@@ -190,6 +195,7 @@ namespace TrainingCenter.Services
         public void GetStudentsWithEnrollmentsAndCourses()
         {
             var students = _context.Students
+                .AsNoTracking()
                 .Include(s => s.Enrollments)
                     .ThenInclude(e => e.Course)
                 .OrderBy(s => s.StudentId)
@@ -217,6 +223,7 @@ namespace TrainingCenter.Services
         public void GetStudentsSummaryReport()
         {
             var report = _context.Students
+                .AsNoTracking()
                 .Select(s => new
                 {
                     FullName = s.FirstName + " " + s.LastName,
@@ -237,6 +244,7 @@ namespace TrainingCenter.Services
         public void GetCoursesWithInstructorsUsingJoin()
         {
             var report = _context.Courses
+                .AsNoTracking()
                 .Join(
                     _context.Instructors,
                     course => course.InstructorId,
@@ -263,8 +271,8 @@ namespace TrainingCenter.Services
         {
             var report =
 
-                from student in _context.Students
-                join profile in _context.StudentProfiles
+                from student in _context.Students.AsNoTracking()
+                join profile in _context.StudentProfiles.AsNoTracking()
                     on student.StudentId equals profile.StudentId
                     into profilesGroup
                 from subProfile in profilesGroup.DefaultIfEmpty()
@@ -288,7 +296,7 @@ namespace TrainingCenter.Services
 
         public void GetAllEnrollmentsUsingSelectMany()
         {
-            var report = _context.Students
+            var report = _context.Students.AsNoTracking()
                 .SelectMany(
                     student => student.Enrollments,
                     (student, enrollment) => new
@@ -315,7 +323,7 @@ namespace TrainingCenter.Services
 
         public void GetCoursesPricedAboveAverage()
         {
-            var courses = _context.Courses
+            var courses = _context.Courses.AsNoTracking()
                 .Where(c =>
                     c.Price >
                     _context.Courses.Average(x => x.Price))

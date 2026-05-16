@@ -18,6 +18,7 @@ namespace TrainingCenter.Services
         public void PrintAllStudents()
         {
             var query = _context.Students
+                .AsNoTracking()
                 .OrderBy(s => s.StudentId);
 
             // Execute query
@@ -53,6 +54,7 @@ namespace TrainingCenter.Services
         public void PrintActiveStudentsWithTracing()
         {
             var query = _context.Students
+                .AsNoTracking()
                 .Where(s => s.Status == "Active")
                 .OrderBy(s => s.StudentId);
 
@@ -76,6 +78,7 @@ namespace TrainingCenter.Services
         public void GetActiveStudentsCount()
         {
             var query = _context.Students
+                .AsNoTracking()
                 .Where(s => s.Status == "Active");
 
             Console.WriteLine("Preview SQL:");
@@ -98,6 +101,7 @@ namespace TrainingCenter.Services
         public void GetFirstActiveStudentOrDefault()
         {
             var query = _context.Students
+                .AsNoTracking()
                 .Where(s => s.Status == "Active")
                 .OrderBy(s => s.StudentId);
 
@@ -121,6 +125,7 @@ namespace TrainingCenter.Services
         public void GetStudentByEmail(string email)
         {
             var query = _context.Students
+                .AsNoTracking()
                 .Where(s => s.Email == email);
 
             Console.WriteLine("Preview SQL:");
@@ -162,6 +167,7 @@ namespace TrainingCenter.Services
         public void GetStudentByIdUsingFirstOrDefault(int id)
         {
             var query = _context.Students
+                .AsNoTracking()                
                 .Where(s => s.StudentId == id);
 
             Console.WriteLine("Preview SQL:");
@@ -188,6 +194,7 @@ namespace TrainingCenter.Services
         public void GetStudentNamesOnly()
         {
             var students = _context.Students
+                .AsNoTracking()
                 .Select(s => new
                 {
                     s.FirstName,
@@ -205,6 +212,7 @@ namespace TrainingCenter.Services
         public void GetActiveStudentsProjectedSorted()
         {
             var students = _context.Students
+                .AsNoTracking()
                 .Where(s => s.Status == "Active")
                 .Select(s => new
                 {
@@ -229,6 +237,7 @@ namespace TrainingCenter.Services
         {
             var pagedStudents = 
                 _context.Students
+                    .AsNoTracking()
                     .OrderBy(s => s.StudentId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
