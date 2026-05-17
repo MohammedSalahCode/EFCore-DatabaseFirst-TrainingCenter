@@ -364,5 +364,75 @@ namespace TrainingCenter.Services
 
             Console.WriteLine($"Affected Rows: {affectedRows}");
         }
+
+
+
+        // =========================
+        // Add New Entity (Insert Workflow)
+        // =========================
+        public int AddStudent(string firstName, string lastName, string email)
+        {
+            var newStudent = new Student
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Status = "Active"
+            };
+
+            _context.Students.Add(newStudent);
+
+            int affectedRows = _context.SaveChanges();
+
+            Console.WriteLine($"Generated Student ID: {newStudent.StudentId}");
+            Console.WriteLine($"Affected Rows: {affectedRows}");
+
+            return newStudent.StudentId;
+        }
+
+
+
+        // =========================
+        // Delete Tracked Entity 
+        // =========================
+        public void DeleteStudent(int studentId)
+        {
+            var student = _context.Students.Find(studentId);
+
+            if (student == null)
+            {
+                Console.WriteLine($"No student found with ID = {studentId}");
+                return;
+            }
+
+            _context.Students.Remove(student);
+
+            int affectedRows = _context.SaveChanges();
+
+            Console.WriteLine($"Deleted Rows: {affectedRows}");
+        }
+
+
+
+        // =========================
+        // Delete Detached Entity 
+        // =========================
+        public void DeleteStudentDirect(int studentId)
+        {
+            var student = new Student { StudentId = studentId };
+
+            _context.Students.Attach(student);
+            _context.Students.Remove(student);
+
+            try
+            {
+                int affectedRows = _context.SaveChanges();
+                Console.WriteLine($"Deleted successfully. Rows: {affectedRows}");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                Console.WriteLine($"Delete Failed: Student with ID {studentId} does not exist");
+            }
+        }
     }
 }

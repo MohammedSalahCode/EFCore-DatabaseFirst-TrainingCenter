@@ -179,4 +179,23 @@ context.ChangeTracker.Clear();
 
 studentService.UpdateStudentStatusUsingAttach(updateDto);
 
+
+
+// =========================
+// Insert + Delete (Tracked)
+// =========================
+
+int id1 = studentService.AddStudent("mohammed", "salah", "a@test.com");
+studentService.DeleteStudent(id1);
+
+
+// =========================
+// Insert + Delete (Detached)
+// =========================
+
+int id2 = studentService.AddStudent("mohammed", "salah", "b@test.com");
+
+context.ChangeTracker.Clear();
+studentService.DeleteStudentDirect(id2);
+
 Console.WriteLine("Execution completed successfully.");
