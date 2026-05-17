@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TrainingCenter.Data;
+using TrainingCenter.Entities;
 
 namespace TrainingCenter.Services
 {
@@ -311,6 +312,57 @@ namespace TrainingCenter.Services
         private void PrintState<T>(string label, T entity)
         {
             Console.WriteLine($"{label}: {_context.Entry(entity).State}");
+        }
+
+
+        public class UpdateStudentStatusDto
+        {
+            public int StudentId { get; set; }
+            public string Status { get; set; } = string.Empty;
+        }
+
+
+
+        // =========================
+        // Detached Update Pattern - Load Then Update (Safe API Style)
+        // =========================
+        public void UpdateStudentStatusSafe(UpdateStudentStatusDto dto)
+        {
+            var student = _context.Students
+                .FirstOrDefault(s => s.StudentId == dto.StudentId);
+
+            if (student == null)
+                return;
+
+            student.Status = dto.Status;
+
+            int affectedRows = _context.SaveChanges();
+
+            Console.WriteLine($"Affected Rows: {affectedRows}");
+        }
+
+
+
+        // =========================
+        // Detached Entity Update - Attach Pattern
+        // =========================
+
+        public void UpdateStudentStatusUsingAttach(UpdateStudentStatusDto dto)
+        {
+            var student = new Student
+            {
+                StudentId = dto.StudentId,
+                Status = dto.Status
+            };
+
+            // Attach detached entity coming from API request
+            _context.Attach(student);
+
+            _context.Entry(student).Property(s => s.Status).IsModified = true;
+
+            int affectedRows = _context.SaveChanges();
+
+            Console.WriteLine($"Affected Rows: {affectedRows}");
         }
     }
 }

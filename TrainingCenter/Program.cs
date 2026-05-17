@@ -161,4 +161,22 @@ studentService.GetStudentsPaged(pageNumber: 2, pageSize: 3);
 studentService.UpdateTrackedStudentStatus(studentId: 5);
 studentService.UpdateUntrackedStudentStatus(studentId: 1);
 
+
+
+// =========================
+// Detached Entity Update Patterns (API Style)
+// =========================
+
+var updateDto = new StudentService.UpdateStudentStatusDto()
+{
+    StudentId = 7,
+    Status = "Suspended"
+};
+
+studentService.UpdateStudentStatusSafe(updateDto);
+
+context.ChangeTracker.Clear();
+
+studentService.UpdateStudentStatusUsingAttach(updateDto);
+
 Console.WriteLine("Execution completed successfully.");
