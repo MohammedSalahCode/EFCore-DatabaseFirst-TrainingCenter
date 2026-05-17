@@ -150,8 +150,8 @@ Console.WriteLine();
 // Pagination
 // =========================
 Console.WriteLine("======== PAGINATION ========");
-studentService.GetStudentsPaged(pageNumber: 1, pageSize: 3);
-studentService.GetStudentsPaged(pageNumber: 2, pageSize: 3);
+await studentService.GetStudentsPagedAsync(pageNumber: 1, pageSize: 3);
+await studentService.GetStudentsPagedAsync(pageNumber: 2, pageSize: 3);
 
 
 
@@ -173,7 +173,7 @@ var updateDto = new StudentService.UpdateStudentStatusDto()
     Status = "Suspended"
 };
 
-studentService.UpdateStudentStatusSafe(updateDto);
+await studentService.UpdateStudentStatusSafeAsync(updateDto);
 
 context.ChangeTracker.Clear();
 
@@ -186,7 +186,7 @@ studentService.UpdateStudentStatusUsingAttach(updateDto);
 // =========================
 
 int id1 = studentService.AddStudent("mohammed", "salah", "a@test.com");
-studentService.DeleteStudent(id1);
+await studentService.DeleteStudentAsync(id1);
 
 
 // =========================

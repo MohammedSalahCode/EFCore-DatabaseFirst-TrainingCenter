@@ -234,16 +234,15 @@ namespace TrainingCenter.Services
         // Pagination
         // =========================
 
-        public void GetStudentsPaged(int pageNumber, int pageSize)
+        public async Task GetStudentsPagedAsync(int pageNumber, int pageSize)
         {
-            var pagedStudents = 
-                _context.Students
+            var pagedStudents = await _context.Students
                     .AsNoTracking()
                     .OrderBy(s => s.StudentId)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .Select(s => new { s.StudentId, Name = s.FirstName + " " + s.LastName })
-                    .ToList();
+                    .ToListAsync();
 
             if (!pagedStudents.Any())
             {
@@ -326,17 +325,17 @@ namespace TrainingCenter.Services
         // =========================
         // Detached Update Pattern - Load Then Update (Safe API Style)
         // =========================
-        public void UpdateStudentStatusSafe(UpdateStudentStatusDto dto)
+        public async Task UpdateStudentStatusSafeAsync(UpdateStudentStatusDto dto)
         {
-            var student = _context.Students
-                .FirstOrDefault(s => s.StudentId == dto.StudentId);
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.StudentId == dto.StudentId);
 
             if (student == null)
                 return;
 
             student.Status = dto.Status;
 
-            int affectedRows = _context.SaveChanges();
+            int affectedRows = await _context.SaveChangesAsync();
 
             Console.WriteLine($"Affected Rows: {affectedRows}");
         }
@@ -395,9 +394,9 @@ namespace TrainingCenter.Services
         // =========================
         // Delete Tracked Entity 
         // =========================
-        public void DeleteStudent(int studentId)
+        public async Task DeleteStudentAsync(int studentId)
         {
-            var student = _context.Students.Find(studentId);
+            var student = await _context.Students.FindAsync(studentId);
 
             if (student == null)
             {
@@ -407,7 +406,7 @@ namespace TrainingCenter.Services
 
             _context.Students.Remove(student);
 
-            int affectedRows = _context.SaveChanges();
+            int affectedRows = await _context.SaveChangesAsync();
 
             Console.WriteLine($"Deleted Rows: {affectedRows}");
         }
