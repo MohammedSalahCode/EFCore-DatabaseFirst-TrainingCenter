@@ -153,4 +153,12 @@ Console.WriteLine("======== PAGINATION ========");
 studentService.GetStudentsPaged(pageNumber: 1, pageSize: 3);
 studentService.GetStudentsPaged(pageNumber: 2, pageSize: 3);
 
+
+
+// =========================
+// Tracking vs AsNoTracking (Change Tracker Behavior Comparison)
+// =========================
+studentService.UpdateTrackedStudentStatus(studentId: 5);
+studentService.UpdateUntrackedStudentStatus(studentId: 1);
+
 Console.WriteLine("Execution completed successfully.");

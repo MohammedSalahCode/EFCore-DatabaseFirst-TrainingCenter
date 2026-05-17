@@ -256,5 +256,61 @@ namespace TrainingCenter.Services
             }
         }
 
+
+        // =========================
+        // Tracked Entity Update (Change Tracker Behavior)
+        // =========================
+
+        public void UpdateTrackedStudentStatus(int studentId)
+        {
+            var student = _context.Students
+                .FirstOrDefault(s => s.Status == "Active" && s.StudentId == studentId);
+
+            if (student == null)
+                return;
+
+            PrintState("Before Modification", student);
+
+            student.Status = "Suspended";
+
+            PrintState("After Modification", student);
+
+            int affectedRows = _context.SaveChanges();
+
+            Console.WriteLine($"Affected Rows: {affectedRows}");
+
+            Console.WriteLine($"Student {studentId} has been Suspended.");
+
+        }
+
+
+        // =========================
+        // Tracking vs AsNoTracking (Update Behavior Comparison)
+        // =========================
+        public void UpdateUntrackedStudentStatus(int studentId)
+        {
+            var student = _context.Students
+                .AsNoTracking()
+                .FirstOrDefault(s => s.StudentId == studentId);
+
+            if (student == null)
+                return;
+
+            PrintState("Loaded Entity", student);
+
+            student.Status = "Suspended";
+
+            PrintState("After Modification (Not Tracked)", student);
+
+            int affectedRows = _context.SaveChanges();
+
+            Console.WriteLine($"Affected Rows: {affectedRows}");
+            Console.WriteLine("No UPDATE executed because entity is not tracked.");
+        }
+
+        private void PrintState<T>(string label, T entity)
+        {
+            Console.WriteLine($"{label}: {_context.Entry(entity).State}");
+        }
     }
 }
